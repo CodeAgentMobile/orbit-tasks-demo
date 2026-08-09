@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Orbit Tasks</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <h1>Orbit Tasks</h1>
+        <p class="tag">A tiny playground for your AI agent.</p>
+      </header>
+
+      <form id="new-task-form" autocomplete="off">
+        <input id="new-task-title" type="text" placeholder="Add a task…" required maxlength="200" />
+        <input id="new-task-due" type="date" />
+        <button type="submit">Add</button>
+      </form>
+
+      <ul id="task-list" aria-live="polite"></ul>
+      <p id="empty-hint" hidden>No tasks yet — add one above.</p>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

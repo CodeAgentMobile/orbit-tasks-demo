@@ -1,0 +1,7 @@
+{
+  "framework": "node",
+  "command": "node",
+  "args": ["server.js"],
+  "port": 3000,
+  "ready_pattern": "listening on"
+}
