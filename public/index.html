@@ -9,15 +9,47 @@
   <body>
     <main class="shell">
       <header>
-        <h1>Orbit Tasks</h1>
-        <p class="tag">A tiny playground for your AI agent.</p>
+        <div class="brand">
+          <span class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="12" cy="12" r="3.5" />
+              <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-28 12 12)" />
+            </svg>
+          </span>
+          <div>
+            <h1>Orbit Tasks</h1>
+            <p class="tag">A tiny playground for your AI agent.</p>
+          </div>
+        </div>
+        <button id="theme-toggle" type="button" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">🌙</button>
       </header>
+
+      <section class="progress" aria-hidden="true">
+        <div class="progress-head">
+          <span id="progress-label">0 of 0 done</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+      </section>
 
       <form id="new-task-form" autocomplete="off">
         <input id="new-task-title" type="text" placeholder="Add a task…" required maxlength="200" />
-        <input id="new-task-due" type="date" />
-        <button type="submit">Add</button>
+        <div class="form-row">
+          <input id="new-task-due" type="date" />
+          <select id="new-task-priority" aria-label="Priority">
+            <option value="low">Low</option>
+            <option value="med" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+          <button type="submit">Add</button>
+        </div>
       </form>
+
+      <nav class="filters" id="filters" aria-label="Filter tasks">
+        <button type="button" class="filter active" data-filter="all">All</button>
+        <button type="button" class="filter" data-filter="active">Active</button>
+        <button type="button" class="filter" data-filter="done">Done</button>
+      </nav>
 
       <ul id="task-list" aria-live="polite"></ul>
       <p id="empty-hint" hidden>No tasks yet — add one above.</p>

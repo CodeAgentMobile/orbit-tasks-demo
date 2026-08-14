@@ -12,13 +12,16 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 // ── In-memory task store (reseeds on restart — it's a playground) ──
 let nextId = 4;
 const tasks = [
-  { id: 1, title: 'Review the landing page copy', due: '2026-08-14', done: false },
-  { id: 2, title: 'Fix the flaky signup test', due: '2026-08-12', done: true },
-  { id: 3, title: 'Draft the release notes', due: '2026-08-20', done: false },
+  { id: 1, title: 'Review the landing page copy', due: '2026-08-14', done: false, priority: 'high' },
+  { id: 2, title: 'Fix the flaky signup test', due: '2026-08-12', done: true, priority: 'med' },
+  { id: 3, title: 'Draft the release notes', due: '2026-08-20', done: false, priority: 'low' },
 ];
 
-// TODO(feature): tasks deserve a priority field (low | med | high) —
-// add it to the API here and render a colored chip in the UI.
+const PRIORITIES = ['low', 'med', 'high'];
+// Coerce any incoming priority to a known value, defaulting to 'med'.
+function normalizePriority(value) {
+  return PRIORITIES.includes(value) ? value : 'med';
+}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -72,6 +75,7 @@ const server = http.createServer(async (req, res) => {
         title: body.title.slice(0, 200),
         due: typeof body.due === 'string' ? body.due : null,
         done: false,
+        priority: normalizePriority(body.priority),
       };
       tasks.push(task);
       return sendJson(res, 201, task);
@@ -79,18 +83,25 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 400, { error: 'invalid JSON body' });
     }
   }
-  const patchMatch = url.pathname.match(/^\/api\/tasks\/(\d+)$/);
-  if (patchMatch && req.method === 'PATCH') {
-    const task = tasks.find((t) => t.id === Number(patchMatch[1]));
+  const idMatch = url.pathname.match(/^\/api\/tasks\/(\d+)$/);
+  if (idMatch && req.method === 'PATCH') {
+    const task = tasks.find((t) => t.id === Number(idMatch[1]));
     if (!task) return sendJson(res, 404, { error: 'not found' });
     try {
       const body = await readBody(req);
       if (typeof body.done === 'boolean') task.done = body.done;
       if (typeof body.title === 'string') task.title = body.title.slice(0, 200);
+      if (PRIORITIES.includes(body.priority)) task.priority = body.priority;
       return sendJson(res, 200, task);
     } catch {
       return sendJson(res, 400, { error: 'invalid JSON body' });
     }
+  }
+  if (idMatch && req.method === 'DELETE') {
+    const idx = tasks.findIndex((t) => t.id === Number(idMatch[1]));
+    if (idx === -1) return sendJson(res, 404, { error: 'not found' });
+    const [removed] = tasks.splice(idx, 1);
+    return sendJson(res, 200, removed);
   }
 
   // ── Static files ──
