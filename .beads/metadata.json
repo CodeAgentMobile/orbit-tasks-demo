@@ -1,0 +1,9 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "server",
+  "dolt_database": "orbit_tasks_demo_d45106b7",
+  "project_id": "0a5c597d-9c0a-4a68-abd7-c1b6d0d9ad62",
+  "global_dolt_database": "beads_global",
+  "global_project_id": "00000000-0000-0000-0000-000000000000"
+}
